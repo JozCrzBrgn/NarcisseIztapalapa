@@ -1,3 +1,8 @@
+# Streamlit configuration
+.streamlit/
+credenciales_iztapalapa.json
+borrar.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
