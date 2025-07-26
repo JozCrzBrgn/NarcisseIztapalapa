@@ -10,7 +10,7 @@ class Configuracion:
         self.BUCKET_GENERAL = st.secrets["BUCKET_GENERAL"]
         self.CREDENCIALES_FILE_OUTPUT = st.secrets["CREDENCIALES_FILE_OUTPUT"]
         self.TAB_INVENTARIO = st.secrets["TAB_INVENTARIO"]
-        self.SUCURSAL = st.secrets["SUCURSAL"]
+        self.NOMBRE_SUCURSAL = st.secrets["NOMBRE_SUCURSAL"]
 
 config = Configuracion()
 
