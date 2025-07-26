@@ -45,17 +45,24 @@ elif authentication_status:
     data = config.supabase.table(config.TAB_INVENTARIO).select("clave,producto,categoria,tipo_combo,fecha_estatus,hora_estatus,costo_neto_producto").eq("estatus", "VENDIDO").execute().data
     # Creamos el Dataframe
     df = pd.DataFrame(data)
-    print(df.columns)
+
     # Quitamos las columnas que no necesitamos
     df_inv = df[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
     # Convertimos la columna de caducidad a datetime
     df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
+    # Agregamos columna año
+    df_inv['anio'] = df_inv['fecha_estatus'].dt.year
     # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
     df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
 
 
     col1_1, col1_2  = st.columns(2)
     with col1_1:
+        #? FILTRO POR AÑO
+        anios_disponibles = sorted(df_inv['anio'].unique())
+        anio_seleccionado = st.selectbox('Selecciona un año:', options=anios_disponibles, index=0)
+        df_inv = df_inv[df_inv['anio'] == anio_seleccionado]
+
         #? FILTROS POR MES
         # Extraer los meses de la columna de fechas
         df_inv['mes'] = df_inv['fecha_estatus'].dt.month
@@ -69,7 +76,12 @@ elif authentication_status:
         }
 
         # Filtro por mes, inicializando en enero (mes 1)
-        mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
+        mes_seleccionado = st.selectbox(
+            'Selecciona un mes:', 
+            options=list(meses.keys()), 
+            format_func=lambda x: meses[x], 
+            index=0
+            )
 
         # Filtrar el DataFrame según el mes seleccionado
         df_filtrado = df_inv[df_inv['mes'] == mes_seleccionado]
