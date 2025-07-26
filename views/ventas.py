@@ -87,24 +87,29 @@ elif authentication_status:
         df_filtrado = df_inv[df_inv['mes'] == mes_seleccionado]
 
     with col1_2:
-        #? FILTROS POR DÍAS
-        # Verificar si el DataFrame filtrado está vacío
+        #? FILTROS POR FECHAS
         if df_filtrado.empty:
-            st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]}.")
+            st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]} de {anio_seleccionado}.")
         else:
-            # Obtener los días disponibles para el mes seleccionado
-            dia_min = df_filtrado['dia'].min()
-            dia_max = df_filtrado['dia'].max()
+            # Calcular rango mínimo y máximo disponible dentro del mes y año seleccionado
+            fecha_min = df_filtrado['fecha_estatus'].min().date()
+            fecha_max = df_filtrado['fecha_estatus'].max().date()
 
-            # Filtro por número de día usando un slider
-            dias_seleccionados = st.slider(
-                'Filtrar por días:',
-                min_value=dia_min,
-                max_value=dia_max,
-                value=(dia_min, dia_max)
+            # Date input para seleccionar rango
+            rango_fechas = st.date_input(
+                "Filtrar por rango de fechas:",
+                value=(fecha_min, fecha_max),
+                min_value=fecha_min,
+                max_value=fecha_max
             )
-            # Filtrar el DataFrame según los días seleccionados
-            df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
+
+            # Validar que se devuelva una tupla (inicio, fin)
+            if isinstance(rango_fechas, tuple) and len(rango_fechas) == 2:
+                fecha_inicio, fecha_fin = rango_fechas
+                df_filtrado = df_filtrado[
+                    (df_filtrado['fecha_estatus'].dt.date >= fecha_inicio) &
+                    (df_filtrado['fecha_estatus'].dt.date <= fecha_fin)
+                ]
 
     if df_filtrado.empty==False:
         col1_1, col1_2, col2_2, col1_3  = st.columns([1,1,1,2])#[2,2,1])
