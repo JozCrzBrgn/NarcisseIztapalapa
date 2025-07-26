@@ -3,7 +3,7 @@ ifeq (,$(wildcard .streamlit/secrets.toml))
 $(error El archivo secrets.toml NO existe.)
 endif
 
-# Carga variables desde .env
+# Carga variables desde .streamlit/secrets.toml
 include .streamlit/secrets.toml
 export
 
