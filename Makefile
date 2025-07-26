@@ -1,4 +1,4 @@
-# Verificar si el archivo .env existe
+# Verificar si el archivo .streamlit/secrets.toml existe
 ifeq (,$(wildcard .streamlit/secrets.toml))
 $(error El archivo secrets.toml NO existe.)
 endif
